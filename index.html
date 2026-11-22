@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=overlays-content">
+<meta name="theme-color" content="#1e3c72">
+<title>Partitiivi ja Genetiivi — Грамматика A1</title>
+
+<style>
+  :root {
+    --primary: #2a5298; --primary-dark: #1e3c72; --primary-light: #e8eef7;
+    --gen-bg: #f0e6ff; --gen-text: #6b2fa8; --part-bg: #e3f0ff; --part-text: #1e5aa8;
+    --success-bg: #e6f7ec; --success-text: #1a7f3c; --success-border: #7ed3a0;
+    --error-bg: #fdecec; --error-text: #b32d2d; --error-border: #f5a3a3;
+    --btn-h: 38px;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100dvh; margin: 0; padding: 0; overflow: hidden; }
+  body {
+    font-family: -apple-system, 'Segoe UI', Roboto, system-ui, sans-serif;
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+    padding: 6px; display: flex; flex-direction: column; align-items: center; color: #222;
+  }
+  .wrap { max-width: 540px; width: 100%; height: 100%; display: flex; flex-direction: column; gap: 5px; }
+  .panel { background: #fff; border-radius: 18px; box-shadow: 0 10px 32px rgba(0,0,0,0.22); padding: 10px 12px; width: 100%; }
+  .panel-top { flex-shrink: 0; padding-bottom: 9px; }
+  .panel-main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
+
+  .icon { width: 15px; height: 15px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+  .icon-md { width: 17px; height: 17px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+  .icon-lg { width: 28px; height: 28px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 4px; }
+
+  .section-head { display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 700; color: #666; text-transform: uppercase; margin-bottom: 5px; }
+  .link-btn { background: none; border: none; color: var(--primary); font-size: 11.5px; font-weight: 600; cursor: pointer; text-decoration: underline; padding: 0; }
+
+  .topic-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-bottom: 6px; }
+  .chip { height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 9px; font-size: 12.5px; font-weight: 700; background: #f0f4fa; color: var(--primary); cursor: pointer; user-select: none; border: 1.5px solid #dbe5f4; }
+  .chip.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+  .global-progress { display: flex; justify-content: space-between; align-items: center; background: #f4f7fc; padding: 5px 10px; border-radius: 9px; font-size: 11.5px; color: #444; margin-bottom: 6px; }
+
+  .controls-stack { display: flex; flex-direction: column; gap: 5px; }
+  .modes-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+  .settings-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; }
+  .mode-btn { height: var(--btn-h); border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 5px; padding: 0 4px; border: 1.5px solid #dbe5f4; background: #f0f4fa; color: var(--primary); }
+  .mode-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .mini-btn { height: var(--btn-h); border-radius: 10px; font-weight: 700; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 4px; padding: 0 4px; border: 1.5px solid var(--primary); background: #fff; color: var(--primary); }
+  .mini-btn.muted { border-color: #cbd5e1; color: #888; background: #f8fafc; }
+  .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; min-height: 30px; gap: 6px; }
+  .tag { font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; white-space: nowrap; }
+  .tag.part { background: var(--part-bg); color: var(--part-text); }
+  .tag.gen { background: var(--gen-bg); color: var(--gen-text); }
+
+  .umlauts { display: flex; gap: 5px; }
+  .umlaut-btn { height: 30px; width: 34px; font-size: 15px; font-weight: 700; background: var(--primary-light); color: var(--primary-dark); border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; border: none; cursor: pointer; }
+  .btn-speak { height: 30px; width: 36px; display: inline-flex; align-items: center; justify-content: center; background: #fff; border: 1.5px solid var(--primary); color: var(--primary); padding: 0; border-radius: 8px; cursor: pointer; }
+  .btn-speak:disabled { opacity: 0.5; cursor: default; }
+
+  .word-box { text-align: center; padding: 12px 10px; background: #f7f9fc; border-radius: 13px; border: 1px solid #eef2f7; margin-bottom: 7px; }
+  .sentence { font-size: 18px; font-weight: 600; color: var(--primary-dark); line-height: 1.4; }
+  .blank { color: var(--primary); font-weight: 700; border-bottom: 2px dashed var(--primary); padding: 0 6px; }
+  .base-word { color: #64748b; font-weight: 500; font-size: 16px; }
+
+  .answer-input { height: 38px; width: 100%; padding: 0 12px; font-size: 16px; border: 2px solid #d0dbe8; border-radius: 10px; outline: none; text-align: center; }
+  .answer-input:focus { border-color: var(--primary); }
+
+  .options-grid { display: flex; flex-direction: column; gap: 6px; }
+  .opt-btn { min-height: 38px; width: 100%; padding: 7px 14px; font-size: 14px; font-weight: 600; text-align: left; background: #fff; border: 2px solid #d0dbe8; color: #222; border-radius: 10px; cursor: pointer; }
+  .opt-btn.correct { background: var(--success-bg); color: var(--success-text); border-color: var(--success-border); }
+  .opt-btn.wrong { background: var(--error-bg); color: var(--error-text); border-color: var(--error-border); }
+
+  button { font-family: inherit; border: none; cursor: pointer; }
+  .buttons { display: flex; gap: 6px; margin-top: 7px; }
+  .btn-primary, .btn-success, .btn-wrong, .btn-secondary { height: var(--btn-h); flex: 1; border-radius: 10px; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 5px; padding: 0 8px; }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-success { background: var(--success-text); color: #fff; }
+  .btn-wrong { background: var(--error-text); color: #fff; }
+  .btn-secondary { background: var(--primary-light); color: var(--primary); }
+
+  .feedback-box { margin-top: 7px; padding: 8px 10px; border-radius: 10px; font-size: 13px; line-height: 1.35; text-align: center; }
+  .feedback-box.correct { background: var(--success-bg); color: var(--success-text); border: 1.5px solid var(--success-border); }
+  .feedback-box.wrong { background: var(--error-bg); color: var(--error-text); border: 1.5px solid var(--error-border); }
+  .fb-trans { font-style: italic; color: #475569; font-size: 12px; margin-top: 3px; display: block; }
+
+  .stats { margin-top: 8px; padding-top: 6px; border-top: 1px solid #f0f2f5; font-size: 11.5px; color: #666; display: flex; justify-content: space-between; font-weight: 600; }
+  .err-stat { color: var(--error-text); }
+  .footer-bar { margin-top: auto; padding-top: 8px; display: flex; justify-content: space-between; align-items: center; color: #888; font-size: 11px; }
+
+  #gameArea { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+  .rules-scroll { overflow-y: auto; flex: 1; padding-right: 2px; font-size: 12.5px; line-height: 1.4; color: #334155; }
+  .tabs { display: flex; gap: 6px; margin-bottom: 10px; flex-shrink: 0; }
+  .tab-btn { flex: 1; height: 34px; border-radius: 9px; background: #f0f4fa; color: var(--primary); font-weight: 700; font-size: 13px; border: 1.5px solid #dbe5f4; }
+  .tab-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  .rules-title { font-size: 13.5px; font-weight: 700; color: var(--primary-dark); margin: 10px 0 5px; }
+  .rules-title:first-child { margin-top: 0; }
+  .rules-note { background: #f8fafc; padding: 8px 10px; border-radius: 8px; border-left: 3px solid var(--primary); margin-bottom: 8px; display: block; }
+  .tab-content > .rules-title:first-child + .rules-note { min-height: 92px; }
+  .rules-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 8px; }
+  .rules-table th { text-align: left; padding: 6px 8px; background: #edf2fa; color: var(--primary-dark); }
+  .rules-table td { padding: 6px 8px; border-bottom: 1px solid #eef2f7; }
+  .ex-gen { color: var(--gen-text); font-weight: 700; }
+  .ex-part { color: var(--part-text); font-weight: 700; }
+
+  .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); display: none; align-items: center; justify-content: center; padding: 10px; z-index: 999; }
+  .modal-overlay.open { display: flex; }
+  .modal-box { background: #fff; border-radius: 18px; padding: 14px; width: 100%; max-width: 480px; max-height: 88dvh; display: flex; flex-direction: column; box-shadow: 0 20px 50px rgba(0,0,0,0.3); font-size: 12.5px; line-height: 1.4; color: #334155; }
+  .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .modal-head h2 { margin: 0; font-size: 16px; color: var(--primary-dark); }
+  .modal-close { background: #f0f4fa; color: var(--primary); width: 30px; height: 30px; border-radius: 8px; font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+  .modal-body { overflow-y: auto; padding-right: 4px; margin-bottom: 10px; }
+  .modal-body ul { margin: 0; padding-left: 16px; display: flex; flex-direction: column; gap: 6px; }
+</style>
+
+
+</head>
+<body>
+<div class="wrap">
+  <div class="panel panel-top">
+    <div class="section-head"><span>Падежи:</span></div>
+    <div class="topic-grid" id="topicBar">
+      <div class="chip active" onclick="setTopic('all', this)">Все</div>
+      <div class="chip" onclick="setTopic('gen', this)">Genetiivi</div>
+      <div class="chip" onclick="setTopic('part', this)">Partitiivi</div>
+    </div>
+       <div class="global-progress">
+      <span id="globalStatText">Освоено: 0 из 0</span>
+      <button class="link-btn" style="color:var(--error-text)" onclick="clearProgress()">Сбросить прогресс</button>
+    </div>
+    <div class="controls-stack">
+      <div class="modes-row" id="modesBar"></div>
+      <div class="settings-row">
+        <button class="mini-btn" id="muteBtn" onclick="toggleMute()"></button>
+        <button class="mini-btn" id="sizeBtn" onclick="toggleRoundSize()">10 слов</button>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-main">
+    <div id="gameArea"></div>
+    <div class="stats">
+      <span id="progressText"></span>
+      <span id="errorsText" class="err-stat"></span>
+      <span id="learnedText"></span>
+    </div>
+    <div class="footer-bar">
+      <span>Грамматика финского языка · A1</span>
+      <button type="button" class="link-btn" onclick="toggleModal('helpModal', true)">Справка</button>
+    </div>
+  </div>
+</div>
+
+
+ 
+<div class="modal-overlay" id="helpModal" onclick="if(event.target===this)toggleModal('helpModal',false)">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2>Как работать с тренажером</h2>
+      <button type="button" class="modal-close" onclick="toggleModal('helpModal',false)">×</button>
+    </div>
+    <div class="modal-body">
+      <ul>
+        <li><b>Падежи:</b> выберите <b>Genetiivi</b>, <b>Partitiivi</b> или <b>Все</b> сразу. В раунд попадают только невыученные предложения.</li>
+        <li><b>Режимы:</b><br>
+          — <b>Ввод</b>: впишите нужную форму слова (кнопки <i>ä, ö, å</i> расположены над предложением);<br>
+          — <b>Тест</b>: выбор правильной падежной формы из 4 похожих вариантов.
+        </li>
+        <li><b>Управление:</b><br>
+          — <b>Звук</b>: автоозвучка предложения после ответа (кнопка с облачком озвучивает в любой момент);<br>
+          — <b>10 вопр.</b>: выбор количества вопросов в раунде;<br>
+          — <b>Правила</b>: быстрая шпаргалка с таблицами окончаний и глаголами.
+        </li>
+        <li><b>Прогресс:</b> верно решённые с первой попытки предложения сохраняются в памяти браузера.</li>
+      </ul>
+    </div>
+    <button type="button" class="btn-primary" style="width:100%; flex:none;" onclick="toggleModal('helpModal',false)">Понятно</button>
+  </div>
+</div>
+
+
+
+<script>
+const questions = [
+  { type: "gen", sentence: "[...] (Äiti) nimi on Anna.", answer: "Äidin", hint: "Genetiivi: «имя мамы» (t → d)", fullSentence: "Äidin nimi on Anna.", translation: "Маму зовут Анна." },
+  { type: "gen", sentence: "Tämä on [...] (isä) auto.", answer: "isän", hint: "Genetiivi: «машина папы»", fullSentence: "Tämä on isän auto.", translation: "Это машина папы." },
+  { type: "gen", sentence: "Hän asuu [...] (Hanna) kanssa.", answer: "Hannan", hint: "Genetiivi + kanssa (вместе с кем-то)", fullSentence: "Hän asuu Hannan kanssa.", translation: "Он живет вместе с Ханной." },
+  { type: "part", sentence: "Minulla on kaksi [...] (lapsi).", answer: "lasta", hint: "После числа 2 — partitiivi (исключение lasta)", fullSentence: "Minulla on kaksi lasta.", translation: "У меня двое детей." },
+  { type: "part", sentence: "En tunne [...] (veli).", answer: "veljeä", hint: "После отрицания — partitiivi", fullSentence: "En tunne veljeä.", translation: "Я не знаю брата." },
+  { type: "part", sentence: "Rakastan [...] (perhe).", answer: "perhettä", hint: "Слово на -e + глагол rakastaa → partitiivi", fullSentence: "Rakastan perhettä.", translation: "Я люблю семью." },
+  { type: "part", sentence: "Syön leipää ja [...] (voi).", answer: "voita", hint: "Дифтонг (oi) + ta → partitiivi", fullSentence: "Syön leipää ja voita.", translation: "Я ем хлеб с маслом." },
+  { type: "part", sentence: "Juon aamulla [...] (mehu).", answer: "mehua", hint: "Дифтонг (eu) + a → partitiivi", fullSentence: "Juon aamulla mehua.", translation: "Утром я пью сок." },
+  { type: "part", sentence: "Ulkona on [...] (kylmä).", answer: "kylmää", hint: "Погода: на улице холодно (partitiivi)", fullSentence: "Ulkona on kylmää.", translation: "На улице холодно." },
+  { type: "part", sentence: "Minulla on [...] (nälkä).", answer: "nälkä", hint: "Исключение: устойчивое выражение (БЕЗ partitiivi)", fullSentence: "Minulla on nälkä.", translation: "Я голоден." },
+  { type: "gen", sentence: "[...] (Tyttö) takki on punainen.", answer: "Tytön", hint: "Genetiivi: «пальто девочки» (tt → t)", fullSentence: "Tytön takki on punainen.", translation: "Пальто девочки красное." },
+  { type: "gen", sentence: "[...] (Mies) kengät ovat uudet.", answer: "Miehen", hint: "Genetiivi: «обувь мужчины» (mies → miehe-)", fullSentence: "Miehen kengät ovat uudet.", translation: "Обувь мужчины новая." },
+  { type: "gen", sentence: "[...] (Nainen) hattu on musta.", answer: "Naisen", hint: "Genetiivi: «шляпа женщины»", fullSentence: "Naisen hattu on musta.", translation: "Шляпа женщины чёрная." },
+  { type: "part", sentence: "En osta [...] (takki).", answer: "takkia", hint: "После отрицания — partitiivi", fullSentence: "En osta takkia.", translation: "Я не куплю пальто." },
+  { type: "part", sentence: "Ostan kaksi [...] (paita).", answer: "paitaa", hint: "После числа 2 — partitiivi", fullSentence: "Ostan kaksi paitaa.", translation: "Я куплю две рубашки." },
+  { type: "part", sentence: "Katselen [...] (mekko).", answer: "mekkoa", hint: "Незавершённое действие (katsella) — partitiivi", fullSentence: "Katselen mekkoa.", translation: "Я рассматриваю платье." },
+  { type: "part", sentence: "Voitko auttaa [...] (minä)?", answer: "minua", hint: "Глагол auttaa + местоимение в partitiivi", fullSentence: "Voitko auttaa minua?", translation: "Можешь мне помочь?" },
+  { type: "part", sentence: "Olga etsii [...] (työpaikka).", answer: "työpaikkaa", hint: "Глагол etsiä (искать) требует partitiivi", fullSentence: "Olga etsii työpaikkaa.", translation: "Ольга ищет работу." },
+  { type: "part", sentence: "Me katsomme [...] (televisio).", answer: "televisiota", hint: "Глагол katsoa (смотреть) требует partitiivi", fullSentence: "Me katsomme televisiota.", translation: "Мы смотрим телевизор." },
+  { type: "part", sentence: "Julia puhuu [...] (saksa).", answer: "saksaa", hint: "Глагол puhua (говорить на языке) требует partitiivi", fullSentence: "Julia puhuu saksaa.", translation: "Юлия говорит по-немецки." },
+  { type: "part", sentence: "Pedro soittaa [...] (kitara).", answer: "kitaraa", hint: "Глагол soittaa (играть на инструменте) требует partitiivi", fullSentence: "Pedro soittaa kitaraa.", translation: "Педро играет на гитаре." },
+  { type: "part", sentence: "Ymmärrätkö [...] (englanti)?", answer: "englantia", hint: "Глагол ymmärtää (понимать) требует partitiivi", fullSentence: "Ymmärrätkö englantia?", translation: "Ты понимаешь английский?" },
+  { type: "part", sentence: "Lapset pelaavat [...] (jalkapallo).", answer: "jalkapalloa", hint: "Глагол pelata (играть в спорт) требует partitiivi", fullSentence: "Lapset pelaavat jalkapalloa.", translation: "Дети играют в футбол." },
+  { type: "part", sentence: "Odotan [...] (sinä).", answer: "sinua", hint: "Глагол odottaa + местоимение в partitiivi", fullSentence: "Odotan sinua.", translation: "Я жду тебя." },
+  { type: "part", sentence: "Minulla on [...] (monta) ystävää.", answer: "monta", hint: "Слово monta (много) стоит в nominatiivi", fullSentence: "Minulla on monta ystävää.", translation: "У меня много друзей." },
+  { type: "part", sentence: "Ostan [...] (vähän) maitoa.", answer: "vähän", hint: "Слово vähän (мало/немного) не склоняется", fullSentence: "Ostan vähän maitoa.", translation: "Я куплю немного молока." },
+  { type: "part", sentence: "Haluan [...] (puoli) kiloa.", answer: "puoli", hint: "Слово puoli (половина) не изменяется", fullSentence: "Haluan puoli kiloa.", translation: "Я хочу полкило." },
+  { type: "gen", sentence: "Mikä [...] (sinä) nimi on?", answer: "sinun", hint: "Genetiivi местоимения sinä (твой)", fullSentence: "Mikä sinun nimi on?", translation: "Как тебя зовут?" },
+  { type: "gen", sentence: "[...] (Minä) kotimaa on Venäjä.", answer: "Minun", hint: "Genetiivi местоимения minä (мой)", fullSentence: "Minun kotimaa on Venäjä.", translation: "Моя родина — Россия." },
+  { type: "part", sentence: "Opiskelen [...] (suomi) kurssilla.", answer: "suomea", hint: "Глагол opiskella + partitiivi (suomi → suomea)", fullSentence: "Opiskelen suomea kurssilla.", translation: "Я изучаю финский язык на курсе." },
+  { type: "part", sentence: "Opettaja auttaa [...] (me) paljon.", answer: "meitä", hint: "Глагол auttaa + местоимение me в partitiivi", fullSentence: "Opettaja auttaa meitä paljon.", translation: "Учитель много нам помогает." },
+  { type: "gen", sentence: "[...] (Suomi) lippu on sininen ja valkoinen.", answer: "Suomen", hint: "Genetiivi: «флаг Финляндии» (Suomi → Suome-)", fullSentence: "Suomen lippu on sininen ja valkoinen.", translation: "Флаг Финляндии сине-белый." },
+  { type: "part", sentence: "En puhu [...] (ranska).", answer: "ranskaa", hint: "Отрицание + язык → partitiivi", fullSentence: "En puhu ranskaa.", translation: "Я не говорю по-французски." },
+  { type: "part", sentence: "Kesällä on usein [...] (kuuma).", answer: "kuumaa", hint: "Погода: летом часто жарко (partitiivi)", fullSentence: "Kesällä on usein kuumaa.", translation: "Летом часто жарко." },
+  { type: "part", sentence: "Syksyllä syön aamulla usein [...] (puuro).", answer: "puuroa", hint: "Долгая гласная (oo) + a → partitiivi", fullSentence: "Syksyllä syön aamulla usein puuroa.", translation: "Осенью я часто ем кашу по утрам." },
+  { type: "part", sentence: "Minulla ei ole [...] (kiire).", answer: "kiire", hint: "Исключение: Minulla ei ole kiire (БЕЗ partitiivi)", fullSentence: "Minulla ei ole kiire.", translation: "Я не спешу." },
+  { type: "part", sentence: "Keväällä paistaa [...] (aurinko).", answer: "aurinko", hint: "Исключение: солнце светит (субъект в nominatiivi)", fullSentence: "Keväällä paistaa aurinko.", translation: "Весной светит солнце." },
+  { type: "part", sentence: "Pekka on pitkä ja [...] (komea).", answer: "komea", hint: "Описание человека (субъект в ед. ч. → nominatiivi)", fullSentence: "Pekka on pitkä ja komea.", translation: "Пекка высокий и красивый." },
+  { type: "part", sentence: "Hänellä on kaksi [...] (koira).", answer: "koiraa", hint: "После числа 2 — partitiivi", fullSentence: "Hänellä on kaksi koiraa.", translation: "У него/неё две собаки." },
+  { type: "part", sentence: "Minulla ei ole [...] (kissa).", answer: "kissaa", hint: "Отрицание владения (ei ole) → partitiivi", fullSentence: "Minulla ei ole kissaa.", translation: "У меня нет кошки." },
+  { type: "gen", sentence: "[...] (Hän) silmät ovat siniset.", answer: "Hänen", hint: "Genetiivi местоимения hän (его/её)", fullSentence: "Hänen silmät ovat siniset.", translation: "Его/её глаза голубые." },
+  { type: "part", sentence: "Juon aamulla [...] (kahvi).", answer: "kahvia", hint: "Неисчисляемое вещество (кофе) → partitiivi", fullSentence: "Juon aamulla kahvia.", translation: "Утром я пью кофе." },
+  { type: "part", sentence: "Syön lounaalla [...] (keitto).", answer: "keittoa", hint: "Еда (суп) в процессе еды → partitiivi", fullSentence: "Syön lounaalla keittoa.", translation: "Я ем суп на обед." },
+  { type: "part", sentence: "Hän ei juo [...] (tee).", answer: "teetä", hint: "Отрицание + 2 гласные → partitiivi на -tä", fullSentence: "Hän ei juo teetä.", translation: "Он/она не пьёт чай." },
+  { type: "gen", sentence: "[...] (Veli) vaimo on suomalainen.", answer: "Veljen", hint: "Genetiivi: «жена брата» (veli → velje-)", fullSentence: "Veljen vaimo on suomalainen.", translation: "Жена брата — финка." },
+  { type: "gen", sentence: "[...] (Sisko) poika on viisi vuotta vanha.", answer: "Siskon", hint: "Genetiivi: «сын сестры»", fullSentence: "Siskon poika on viisi vuotta vanha.", translation: "Сыну сестры пять лет." },
+  { type: "part", sentence: "Rakastan [...] (hän) todella paljon.", answer: "häntä", hint: "Глагол rakastaa + местоимение hän в partitiivi", fullSentence: "Rakastan häntä todella paljon.", translation: "Я люблю его/её очень сильно." },
+  { type: "part", sentence: "Meillä on kolme [...] (huone).", answer: "huonetta", hint: "Число 3 + слово на -e → partitiivi на -tta", fullSentence: "Meillä on kolme huonetta.", translation: "У нас три комнаты." },
+  { type: "part", sentence: "Onko sinulla [...] (sisarus)?", answer: "sisarusta", hint: "Вопрос о наличии (обычно partitiivi)", fullSentence: "Onko sinulla sisarusta?", translation: "Есть ли у тебя брат или сестра?" },
+  { type: "gen", sentence: "[...] (Talo) edessä on iso puu.", answer: "Talon", hint: "Genetiivi + послелог edessä (перед домом)", fullSentence: "Talon edessä on iso puu.", translation: "Перед домом растёт большое дерево." },
+  { type: "gen", sentence: "[...] (Keittiö) pöytä on valkoinen.", answer: "Keittiön", hint: "Genetiivi: «стол кухни» (кухонный стол)", fullSentence: "Keittiön pöytä on valkoinen.", translation: "Кухонный стол белый." },
+  { type: "part", sentence: "Olohuoneessa ei ole [...] (sohva).", answer: "sohvaa", hint: "Отрицание наличия (ei ole) → partitiivi", fullSentence: "Olohuoneessa ei ole sohvaa.", translation: "В гостиной нет дивана." },
+  { type: "part", sentence: "Odotamme [...] (bussi) pysäkillä.", answer: "bussia", hint: "Глагол odottaa (ждать) требует partitiivi", fullSentence: "Odotamme bussia pysäkillä.", translation: "Мы ждём автобус на остановке." },
+  { type: "part", sentence: "Etsin uutta [...] (asunto).", answer: "asuntoa", hint: "Глагол etsiä (искать) требует partitiivi", fullSentence: "Etsin uutta asuntoa.", translation: "Я ищу новую квартиру." },
+  { type: "gen", sentence: "[...] (Me) koti on Helsingissä.", answer: "Meidän", hint: "Genetiivi местоимения me (наш)", fullSentence: "Meidän koti on Helsingissä.", translation: "Наш дом находится в Хельсинки." },
+  { type: "part", sentence: "Katson [...] (he) ikkunasta.", answer: "heitä", hint: "Глагол katsoa + местоимение he в partitiivi", fullSentence: "Katson heitä ikkunasta.", translation: "Я смотрю на них из окна." },
+  { type: "part", sentence: "Huoneessa on kaksi [...] (tuoli).", answer: "tuolia", hint: "После числа 2 — partitiivi", fullSentence: "Huoneessa on kaksi tuolia.", translation: "В комнате два стула." },
+  { type: "gen", sentence: "[...] (Opettaja) laukku on pöydällä.", answer: "Opettajan", hint: "Genetiivi: «сумка учителя»", fullSentence: "Opettajan laukku on pöydällä.", translation: "Сумка учителя на столе." },
+  { type: "gen", sentence: "Mikä [...] (te) osoite on?", answer: "teidän", hint: "Genetiivi местоимения te (ваш)", fullSentence: "Mikä teidän osoite on?", translation: "Какой у вас адрес?" },
+  { type: "gen", sentence: "[...] (He) lapsi on koulussa.", answer: "Heidän", hint: "Genetiivi местоимения he (их)", fullSentence: "Heidän lapsi on koulussa.", translation: "Их ребёнок в школе." },
+  { type: "gen", sentence: "[...] (Suomalainen) nimi on usein lyhyt.", answer: "Suomalaisen", hint: "Genetiivi: «имя финна»", fullSentence: "Suomalaisen nimi on usein lyhyt.", translation: "Имя финна часто короткое." },
+  { type: "gen", sentence: "[...] (Nuori nainen) puhelin soi.", answer: "Nuoren naisen", hint: "Genetiivi: «телефон молодой женщины» (nuori → nuore-)", fullSentence: "Nuoren naisen puhelin soi.", translation: "Телефон молодой женщины звонит." },
+  { type: "gen", sentence: "[...] (Koira) nimi on Musti.", answer: "Koiran", hint: "Genetiivi: «кличка собаки»", fullSentence: "Koiran nimi on Musti.", translation: "Собаку зовут Мусти." },
+  { type: "gen", sentence: "[...] (Kissa) ruoka on keittiössä.", answer: "Kissan", hint: "Genetiivi: «еда кошки»", fullSentence: "Kissan ruoka on keittiössä.", translation: "Еда кошки на кухне." },
+  { type: "gen", sentence: "Menen kahvilaan [...] (ystävä) kanssa.", answer: "ystävän", hint: "Genetiivi + kanssa (вместе с другом)", fullSentence: "Menen kahvilaan ystävän kanssa.", translation: "Я иду в кафе с другом." },
+  { type: "gen", sentence: "Asun [...] (mummo) luona.", answer: "mummon", hint: "Genetiivi ед. ч. + luona (у кого-то)", fullSentence: "Asun mummon luona.", translation: "Я живу у бабушки." },
+  { type: "gen", sentence: "[...] (Helsinki) keskusta on kaunis.", answer: "Helsingin", hint: "Genetiivi: «центр Хельсинки» (nk → ng)", fullSentence: "Helsingin keskusta on kaunis.", translation: "Центр Хельсинки красивый." },
+  { type: "gen", sentence: "[...] (Venäjä) pääkaupunki on Moskova.", answer: "Venäjän", hint: "Genetiivi: «столица России»", fullSentence: "Venäjän pääkaupunki on Moskova.", translation: "Столица России — Москва." },
+  { type: "gen", sentence: "[...] (Ruotsi) lippu on sininen ja keltainen.", answer: "Ruotsin", hint: "Genetiivi: «флаг Швеции»", fullSentence: "Ruotsin lippu on sininen ja keltainen.", translation: "Флаг Швеции сине-жёлтый." },
+  { type: "gen", sentence: "[...] (Huone) ikkuna on auki.", answer: "Huoneen", hint: "Genetiivi: «окно комнаты» (huone → huonee-)", fullSentence: "Huoneen ikkuna on auki.", translation: "Окно комнаты открыто." },
+  { type: "gen", sentence: "[...] (Kirja) hinta on kymmenen euroa.", answer: "Kirjan", hint: "Genetiivi: «цена книги»", fullSentence: "Kirjan hinta on kymmenen euroa.", translation: "Цена книги — десять евро." },
+  { type: "gen", sentence: "[...] (Poika) polkupyörä on uusi.", answer: "Pojan", hint: "Genetiivi: «велосипед мальчика» (poika → poja-)", fullSentence: "Pojan polkupyörä on uusi.", translation: "Велосипед мальчика новый." },
+  { type: "part", sentence: "Kuuntelen [...] (musiikki) joka päivä.", answer: "musiikkia", hint: "Глагол kuunnella (слушать) требует partitiivi", fullSentence: "Kuuntelen musiikkia joka päivä.", translation: "Я слушаю музыку каждый день." },
+  { type: "part", sentence: "Syön aamupalalla [...] (leipä) ja juustoa.", answer: "leipää", hint: "Неисчисляемая еда (хлеб) → partitiivi", fullSentence: "Syön aamupalalla leipää ja juustoa.", translation: "На завтрак я ем хлеб и сыр." },
+  { type: "part", sentence: "Juotko [...] (maito) vai vettä?", answer: "maitoa", hint: "Напиток (молоко) → partitiivi", fullSentence: "Juotko maitoa vai vettä?", translation: "Ты пьёшь молоко или воду?" },
+  { type: "part", sentence: "Ostan kaupasta [...] (omena) ja banaania.", answer: "omenaa", hint: "Весовой продукт (яблоки) → partitiivi", fullSentence: "Ostan kaupasta omenaa ja banaania.", translation: "Я куплю в магазине яблок и бананов." },
+  { type: "part", sentence: "Minulla ei ole [...] (raha) mukana.", answer: "rahaa", hint: "Отрицание владения (ei ole) → partitiivi", fullSentence: "Minulla ei ole rahaa mukana.", translation: "У меня нет с собой денег." },
+  { type: "part", sentence: "Huoneessa ei ole [...] (sänky).", answer: "sänkyä", hint: "Отрицание наличия (ei ole) → partitiivi", fullSentence: "Huoneessa ei ole sänkyä.", translation: "В комнате нет кровати." },
+  { type: "part", sentence: "Pöydällä on paljon [...] (ruoka).", answer: "ruokaa", hint: "paljon + неисчисляемое → partitiivi ед. ч.", fullSentence: "Pöydällä on paljon ruokaa.", translation: "На столе много еды." },
+  { type: "part", sentence: "Pöydällä on neljä [...] (lasi).", answer: "lasia", hint: "После числа 4 — partitiivi", fullSentence: "Pöydällä on neljä lasia.", translation: "На столе четыре стакана." },
+  { type: "part", sentence: "Kurssilla on kymmenen [...] (opiskelija).", answer: "opiskelijaa", hint: "После числа 10 — partitiivi", fullSentence: "Kurssilla on kymmenen opiskelijaa.", translation: "На курсе десять студентов." },
+  { type: "part", sentence: "Talvella on usein [...] (pimeä).", answer: "pimeää", hint: "Погода/время суток: зимой часто темно (partitiivi)", fullSentence: "Talvella on usein pimeää.", translation: "Зимой часто темно." },
+  { type: "part", sentence: "Tänään on [...] (lämmin) ilma.", answer: "lämmin", hint: "Перед исчисляемым существительным ilma стоит nominatiivi", fullSentence: "Tänään on lämmin ilma.", translation: "Сегодня тёплая погода." },
+  { type: "part", sentence: "Juon aamulla [...] (tee) ja syön leipää.", answer: "teetä", hint: "Напиток в процессе → partitiivi", fullSentence: "Juon aamulla teetä ja syön leipää.", translation: "Утром я пью чай и ем хлеб." },
+  { type: "part", sentence: "Minulla on [...] (jano).", answer: "jano", hint: "Исключение: устойчивое выражение (БЕЗ partitiivi)", fullSentence: "Minulla on jano.", translation: "Я хочу пить." },
+  { type: "part", sentence: "Lapsella ei ole [...] (kylmä).", answer: "kylmä", hint: "Исключение: Lapsella ei ole kylmä (БЕЗ partitiivi)", fullSentence: "Lapsella ei ole kylmä.", translation: "Ребёнку не холодно." },
+  { type: "part", sentence: "Autan [...] (sinä) mielelläni.", answer: "sinua", hint: "Глагол auttaa + местоимение в partitiivi", fullSentence: "Autan sinua mielelläni.", translation: "Я с радостью тебе помогу." },
+  { type: "part", sentence: "Hän kuuntelee [...] (me) tarkkaavaisesti.", answer: "meitä", hint: "Глагол kuunnella + местоимение в partitiivi", fullSentence: "Hän kuuntelee meitä tarkkaavaisesti.", translation: "Он/она внимательно слушает нас." },
+  { type: "part", sentence: "Tunnetko [...] (hän) hyvin?", answer: "häntä", hint: "Глагол tuntea (знать кого-то) + местоимение в partitiivi", fullSentence: "Tunnetko häntä hyvin?", translation: "Ты хорошо его/её знаешь?" },
+  { type: "part", sentence: "Odotamme [...] (te) asemalla.", answer: "teitä", hint: "Глагол odottaa + местоимение te в partitiivi", fullSentence: "Odotamme teitä asemalla.", translation: "Мы ждём вас на вокзале." },
+  { type: "part", sentence: "Katson [...] (elokuva) illalla.", answer: "elokuvaa", hint: "Глагол katsoa (смотреть) требует partitiivi", fullSentence: "Katson elokuvaa illalla.", translation: "Вечером я смотрю фильм." },
+  { type: "part", sentence: "Luen suomalaista [...] (lehti).", answer: "lehteä", hint: "Незавершённое чтение (lukea) → partitiivi (lehti → lehteä)", fullSentence: "Luen suomalaista lehteä.", translation: "Я читаю финскую газету." },
+  { type: "part", sentence: "Kirjoitan pitkää [...] (kirje).", answer: "kirjettä", hint: "Слово на -e + процесс письма → partitiivi", fullSentence: "Kirjoitan pitkää kirjettä.", translation: "Я пишу длинное письмо." },
+  { type: "part", sentence: "Puhun vähän [...] (venäjä).", answer: "venäjää", hint: "Глагол puhua + язык → partitiivi", fullSentence: "Puhun vähän venäjää.", translation: "Я немного говорю по-русски." },
+  { type: "part", sentence: "En ymmärrä tätä [...] (sana).", answer: "sanaa", hint: "Отрицание + глагол ymmärtää → partitiivi", fullSentence: "En ymmärrä tätä sanaa.", translation: "Я не понимаю это слово." },
+  { type: "part", sentence: "Etsimme hyvää [...] (ravintola).", answer: "ravintolaa", hint: "Глагол etsiä (искать) требует partitiivi", fullSentence: "Etsimme hyvää ravintolaa.", translation: "Мы ищем хороший ресторан." },
+  { type: "part", sentence: "Hän soittaa [...] (piano) todella hyvin.", answer: "pianoa", hint: "Глагол soittaa (играть на инструменте) → partitiivi", fullSentence: "Hän soittaa pianoa todella hyvin.", translation: "Он/она очень хорошо играет на пианино." },
+  { type: "part", sentence: "Lapset pelaavat [...] (jääkiekko).", answer: "jääkiekkoa", hint: "Глагол pelata (играть в хоккей) → partitiivi", fullSentence: "Lapset pelaavat jääkiekkoa.", translation: "Дети играют в хоккей." },
+  { type: "gen", sentence: "[...] (Auto) moottori on uusi.", answer: "Auton", hint: "Genetiivi: «мотор машины»", fullSentence: "Auton moottori on uusi.", translation: "Мотор машины новый." },
+  { type: "part", sentence: "En tarvitse [...] (apu) nyt.", answer: "apua", hint: "Отрицание + глагол tarvita → partitiivi", fullSentence: "En tarvitse apua nyt.", translation: "Мне сейчас не нужна помощь." }
+];
+const $ = id => document.getElementById(id);
+const STORAGE_KEY = 'sm1_cases_learned_v1', MUTE_KEY = 'sm1_cases_muted_v1';
+const svg = (p, c = 'icon') => '<svg class="' + c + '" viewBox="0 0 24 24">' + p + '</svg>';
+const ICONS = {
+  book: svg('<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>'),
+  quiz: svg('<polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>'),
+  type: svg('<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 16h10M6 8h.01M10 8h.01M14 8h.01M18 8h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01"/>'),
+  volOn: svg('<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>'),
+  volOff: svg('<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>'),
+  speak: svg('<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/><path d="M9 10h.01M12 10h.01M15 10h.01"/>', 'icon-md'),
+  check: svg('<polyline points="20 6 9 17 4 12"/>'),
+  x: svg('<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>'),
+  trophy: svg('<circle cx="12" cy="8" r="6"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/>', 'icon-lg')
+};
+
+const RULES_HTML =
+  '<div class="tabs">' +
+    '<button class="tab-btn active" onclick="switchTab(\'tab-gen\', this)">Genetiivi</button>' +
+    '<button class="tab-btn" onclick="switchTab(\'tab-part\', this)">Partitiivi</button>' +
+  '</div>' +
+  '<div class="rules-scroll">' +
+    '<div id="tab-gen" class="tab-content active">' +
+      '<div class="rules-title">1. Когда применять?</div>' +
+      '<div class="rules-note">• <b>Принадлежность:</b> <i>kenen? minkä?</i> (чей? чего?).<br>• <b>С послелогами:</b> <i>kanssa</i> (с), <i>luona</i> (у), <i>edessä</i> (перед).</div>' +
+      '<div class="rules-title">2. Образование (слабая ступень KPT + -n)</div>' +
+      '<table class="rules-table"><tr><th>Тип слова</th><th>Правило</th><th>Пример</th></tr>' +
+      '<tr><td>Обычные</td><td>Слабая основа + <b>-n</b></td><td>talo → <span class="ex-gen">talon</span></td></tr>' +
+      '<tr><td>На <b>-nen</b></td><td><b>-nen</b> → <b>-se-</b> + n</td><td>nainen → <span class="ex-gen">naisen</span></td></tr>' +
+      '<tr><td>На <b>-e</b></td><td>Удвоение <b>-e-</b> + n</td><td>huone → <span class="ex-gen">huoneen</span></td></tr>' +
+      '<tr><td>Особые</td><td>Основа на согласную</td><td>mies → <span class="ex-gen">miehen</span>, lapsi → <span class="ex-gen">lapsen</span></td></tr></table>' +
+      '<div class="rules-title">3. Местоимения</div>' +
+      '<div class="rules-note">minä → <b>minun</b>, sinä → <b>sinun</b>, hän → <b>hänen</b>, me → <b>meidän</b>, te → <b>teidän</b>, he → <b>heidän</b></div>' +
+    '</div>' +
+    '<div id="tab-part" class="tab-content">' +
+      '<div class="rules-title">1. Когда применять?</div>' +
+      '<div class="rules-note">• <b>Отрицание:</b> после <i>ei</i> (<i>En näe koiraa</i>).<br>• <b>Числа и количество:</b> числа > 1 (<i>kaksi taloa</i>), <i>paljon, vähän</i>.<br>• <b>Глаголы процесса:</b> <i>auttaa, etsiä, katsoa, kuunnella, odottaa, pelata, puhua, rakastaa, soittaa, tuntea, ymmärtää</i>.</div>' +
+      '<div class="rules-title">2. Образование (БЕЗ чередования KPT)</div>' +
+      '<table class="rules-table"><tr><th>Тип слова</th><th>Окончание</th><th>Пример</th></tr>' +
+      '<tr><td>1 гласная (кроме e)</td><td><b>-a / -ä</b></td><td>talo → <span class="ex-part">taloa</span></td></tr>' +
+      '<tr><td>2 гласные / согласная</td><td><b>-ta / -tä</b></td><td>maa → <span class="ex-part">maata</span>, mies → <span class="ex-part">miestä</span></td></tr>' +
+      '<tr><td>Слова на <b>-e</b></td><td><b>-tta / -ttä</b></td><td>huone → <span class="ex-part">huonetta</span></td></tr>' +
+      '<tr><td>Слова на <b>-nen</b></td><td><b>-sta / -stä</b></td><td>nainen → <span class="ex-part">naista</span></td></tr></table>' +
+      '<div class="rules-title">3. Исключения и местоимения</div>' +
+      '<div class="rules-note">• <b>Minulla on + Nominatiivi:</b> <i>nälkä, jano, kiire, kylmä, kuuma</i>.<br>• <b>Местоимения:</b> minä → <b>minua</b>, sinä → <b>sinua</b>, hän → <b>häntä</b>, me → <b>meitä</b>, te → <b>teitä</b>, he → <b>heitä</b>.</div>' +
+    '</div>' +
+  '</div>';
+
+
+let learnedSet = new Set(), isMuted = false, selectedTopic = 'all';
+let currentMode = 'typing', roundLimit = 10;
+let pool = [], totalInRound = 0, learnedCount = 0, errorCount = 0, answered = false;
+let sessionMistakes = new Map(), isSpeaking = false, currentAudio = null;
+
+function loadStorage() {
+  try {
+    learnedSet = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
+    isMuted = localStorage.getItem(MUTE_KEY) === '1';
+  } catch (e) {}
+}
+function saveStorage() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([...learnedSet]));
+    localStorage.setItem(MUTE_KEY, isMuted ? '1' : '0');
+  } catch (e) {}
+}
+function clearProgress() {
+  if (!confirm('Сбросить прогресс для выбранного раздела?')) return;
+  questions.filter(q => selectedTopic === 'all' || q.type === selectedTopic)
+    .forEach(q => learnedSet.delete(q.sentence));
+  saveStorage();
+  resetSession();
+}
+function toggleModal(id, show) { $(id).classList.toggle('open', show); }
+function switchTab(tabId, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  $(tabId).classList.add('active');
+}
+function setTopic(t, el) {
+  selectedTopic = t;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  resetSession();
+}
+
+function toggleMute() { isMuted = !isMuted; saveStorage(); updateMuteBtn(); }
+function updateMuteBtn() {
+  const b = $("muteBtn");
+  b.innerHTML = (isMuted ? ICONS.volOff : ICONS.volOn) + ' Звук';
+  b.classList.toggle('muted', isMuted);
+}
+
+function renderModesBar() {
+  $("modesBar").innerHTML =
+    '<button class="mode-btn" id="btnRules" onclick="setMode(\'rules\')">' + ICONS.book + ' Правила</button>' +
+    '<button class="mode-btn" id="btnQuiz" onclick="setMode(\'quiz\')">' + ICONS.quiz + ' Тест</button>' +
+    '<button class="mode-btn active" id="btnTyping" onclick="setMode(\'typing\')">' + ICONS.type + ' Ввод</button>';
+}
+function setMode(m) {
+  const prevMode = currentMode;
+  currentMode = m;
+  $("btnRules").classList.toggle('active', m === 'rules');
+  $("btnQuiz").classList.toggle('active', m === 'quiz');
+  $("btnTyping").classList.toggle('active', m === 'typing');
+  if (m === 'rules') {
+    renderCard();
+  } else if (prevMode === 'rules') {
+    renderCard();
+  } else {
+    resetSession();
+  }
+}
+
+function toggleRoundSize() {
+  roundLimit = roundLimit === 10 ? 20 : roundLimit === 20 ? 0 : 10;
+  $("sizeBtn").textContent = roundLimit ? roundLimit + ' слов' : 'Все слова';
+  resetSession();
+}
+
+
+function resetSession(onlyM = false, all = false) {
+  if (onlyM && sessionMistakes.size > 0) {
+    pool = [...sessionMistakes.values()].sort(() => Math.random() - 0.5);
+  } else {
+    const inT = questions.filter(q => selectedTopic === 'all' || q.type === selectedTopic);
+    const un = all ? inT : inT.filter(q => !learnedSet.has(q.sentence));
+    const sh = un.sort(() => Math.random() - 0.5);
+    pool = roundLimit ? sh.slice(0, roundLimit) : sh;
+  }
+  totalInRound = pool.length;
+  learnedCount = 0;
+  errorCount = 0;
+  sessionMistakes.clear();
+  answered = false;
+  renderCard();
+}
+function speak(text, manual = false) {
+  if ((isMuted && !manual) || isSpeaking) return;
+  const btn = $("speakBtn");
+  let fallbackCalled = false;
+  const reset = () => {
+    isSpeaking = false;
+    if (btn) { btn.disabled = false; btn.innerHTML = ICONS.speak; }
+  };
+  isSpeaking = true;
+  if (btn) { btn.disabled = true; btn.innerHTML = ICONS.speak; }
+  if (currentAudio) {
+    currentAudio.onended = null;
+    currentAudio.onerror = null;
+    currentAudio.pause();
+    currentAudio = null;
+  }
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  const runFallback = () => {
+    if (fallbackCalled) return;
+    fallbackCalled = true;
+    currentAudio = null;
+    if (!('speechSynthesis' in window)) { reset(); return; }
+    const u = new SpeechSynthesisUtterance(text);
+    const vs = window.speechSynthesis.getVoices().filter(v => v.lang.toLowerCase().includes('fi'));
+    const best = vs.find(v => v.name.includes('Natural') || v.name.includes('Online')) || vs.at(0);
+    if (best) u.voice = best;
+    u.lang = 'fi-FI'; u.rate = 0.9; u.onend = reset; u.onerror = reset;
+    window.speechSynthesis.speak(u);
+  };
+  if (location.protocol.startsWith('http')) {
+    const url = 'https://google.com' + encodeURIComponent(text);
+    const a = new Audio(url);
+    currentAudio = a; a.onended = reset; a.onerror = runFallback; a.play().catch(runFallback);
+  } else runFallback();
+  setTimeout(() => { if (isSpeaking) reset(); }, 4000);
+}
+function getQuizOptions(q) {
+  const baseMatch = q.sentence.match(/\(([^)]+)\)/);
+  const baseWord = baseMatch ? baseMatch[1].toLowerCase() : '';
+  const fake = new Set();
+  if (baseWord) {
+    fake.add(baseWord);
+    fake.add(baseWord + 'n');
+    fake.add(baseWord + 'a');
+    fake.add(baseWord + 'ä');
+    fake.add(baseWord + 'ta');
+    fake.add(baseWord + 'tä');
+  }
+  const sameType = questions
+    .filter(x => x.type === q.type && x.answer.toLowerCase() !== q.answer.toLowerCase())
+    .map(x => x.answer);
+  const poolOpts = [...fake, ...sameType]
+    .filter(w => w.toLowerCase() !== q.answer.toLowerCase())
+    .sort(() => Math.random() - 0.5);
+  const unique = [];
+  const used = new Set([q.answer.toLowerCase()]);
+  for (const w of poolOpts) {
+    if (!used.has(w.toLowerCase())) {
+      unique.push(w);
+      used.add(w.toLowerCase());
+      if (unique.length === 3) break;
+    }
+  }
+  return [q.answer, ...unique].sort(() => Math.random() - 0.5);
+}
+
+function renderCard() {
+  const inT = questions.filter(q => selectedTopic === 'all' || q.type === selectedTopic);
+  const done = inT.filter(q => learnedSet.has(q.sentence)).length;
+  $("globalStatText").innerHTML = 'Освоено: <b>' + done + '</b> из <b>' + inT.length + '</b>';
+  $("progressText").textContent = pool.length ? 'Осталось: ' + pool.length : 'Готово!';
+  $("errorsText").textContent = 'Ошибок: ' + errorCount;
+  $("learnedText").textContent = 'В раунде: ' + learnedCount + ' / ' + totalInRound;
+  const area = $("gameArea");
+  
+    const statsBar = document.querySelector('.stats');
+  if (currentMode === 'rules') {
+    statsBar.style.display = 'none';
+    area.innerHTML = RULES_HTML;
+    return;
+  }
+  statsBar.style.display = 'flex';
+
+
+  if (!pool.length) {
+    if (totalInRound === 0) {
+      area.innerHTML =
+        '<div class="word-box"><div style="color:var(--success-text)">' + ICONS.trophy + '</div>' +
+        '<div class="sentence" style="color:var(--success-text)">Все предложения пройдены!</div></div>' +
+        '<div class="buttons">' +
+        '<button class="btn-secondary" onclick="resetSession(false,true)">Повторить вразброс</button>' +
+        '<button class="btn-wrong" onclick="clearProgress()">Сбросить прогресс</button></div>';
+      return;
+    }
+    const mArr = [...sessionMistakes.values()];
+    area.innerHTML =
+      '<div class="word-box"><div style="color:var(--success-text)">' + ICONS.trophy + '</div>' +
+      '<div class="sentence" style="color:var(--success-text)">Hyvää työtä!</div>' +
+      '<div style="font-size:13px;color:#555;margin-top:6px;">Раунд завершён! Ошибок: <b>' + errorCount + '</b></div></div>' +
+      '<div class="buttons">' +
+      (mArr.length ? '<button class="btn-wrong" onclick="resetSession(true)">Повторить ошибки</button>' : '') +
+      '<button class="btn-primary" onclick="resetSession(false)">Следующий раунд →</button></div>';
+    return;
+  }
+
+  const q = pool.at(0);
+  const safeFull = q.fullSentence.replace(/'/g, "\\'");
+  const tagClass = q.type === 'gen' ? 'tag gen' : 'tag part';
+  const tagLabel = q.type === 'gen' ? 'Genetiivi · kenen?' : 'Partitiivi · mitä?';
+  const umlauts = currentMode === 'typing'
+    ? '<div class="umlauts">' +
+      '<button type="button" class="umlaut-btn" onclick="addChar(\'ä\')">ä</button>' +
+      '<button type="button" class="umlaut-btn" onclick="addChar(\'ö\')">ö</button>' +
+      '<button type="button" class="umlaut-btn" onclick="addChar(\'å\')">å</button></div>'
+    : '';
+  const hdr =
+    '<div class="header-row"><span class="' + tagClass + '">' + tagLabel + '</span>' + umlauts +
+    '<button type="button" class="btn-speak" id="speakBtn" onclick="speak(\'' + safeFull + '\',true)" title="Произнести">' +
+    ICONS.speak + '</button></div>';
+  const sentHtml = q.sentence
+    .replace('[...]', '<span class="blank">&nbsp;&nbsp;&nbsp;</span>')
+    .replace(/\(([^)]+)\)/, '<span class="base-word">($1)</span>');
+
+  if (currentMode === 'typing') {
+    area.innerHTML = hdr +
+      '<div class="word-box"><div class="sentence">' + sentHtml + '</div></div>' +
+      '<input type="text" id="typeInput" name="q_' + Date.now() + '" class="answer-input" placeholder="Введите слово..." ' +
+      'autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" ' +
+      'onfocus="clearHintOnEdit()" oninput="clearHintOnEdit()" ' +
+      'onkeydown="if(event.key===\'Enter\'){answered?nextItem(false):checkTyping()}">' +
+      '<div id="typeFeedback"></div>' +
+      '<div class="buttons" id="typeBtns">' +
+      '<button class="btn-secondary" onclick="showHint()">Подсказка</button>' +
+      '<button class="btn-primary" onclick="checkTyping()">Проверить</button></div>';
+    setTimeout(() => $("typeInput")?.focus(), 50);
+  } else {
+    const opts = getQuizOptions(q);
+    area.innerHTML = hdr +
+      '<div class="word-box"><div class="sentence">' + sentHtml + '</div></div>' +
+      '<div class="options-grid">' +
+      opts.map(o => '<button class="opt-btn" onclick="checkQuiz(this,\'' + o.replace(/'/g, "\\'") + '\')">' + o + '</button>').join('') +
+      '</div><div id="typeFeedback"></div>';
+  }
+}
+
+function clearHintOnEdit() {
+  const fb = $("typeFeedback");
+  if (fb && !fb.querySelector('.wrong')) fb.innerHTML = '';
+}
+function addChar(c) {
+  const i = $("typeInput");
+  if (i && !i.disabled) { i.value += c; i.focus(); }
+}
+function showHint() {
+  const q = pool.at(0);
+  $("typeFeedback").innerHTML = '<div class="feedback-box correct">💡 ' + q.hint + '</div>';
+}
+function checkTyping() {
+  if (answered) return;
+  const inp = $("typeInput"), raw = inp.value.trim();
+  if (!raw) { inp.focus(); return; }
+  answered = true;
+  inp.disabled = true;
+  const q = pool.at(0);
+  const ok = raw.toLowerCase() === q.answer.toLowerCase();
+  speak(q.fullSentence, false);
+  if (ok) {
+    $("typeFeedback").innerHTML =
+      '<div class="feedback-box correct"><b>✅ Верно!</b> ' + q.fullSentence +
+      '<span class="fb-trans">' + q.translation + '</span></div>';
+    $("typeBtns").innerHTML = '<button class="btn-success" onclick="nextItem(true)">Дальше →</button>';
+  } else {
+    $("typeFeedback").innerHTML =
+      '<div class="feedback-box wrong"><b>❌ Правильно: ' + q.answer + '</b><br>' + q.fullSentence +
+      '<span class="fb-trans">' + q.translation + '</span></div>';
+    $("typeBtns").innerHTML = '<button class="btn-wrong" onclick="nextItem(false)">Дальше →</button>';
+  }
+}
+function checkQuiz(btn, chosen) {
+  if (answered) return;
+  answered = true;
+  document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+  const q = pool.at(0), ok = chosen.toLowerCase() === q.answer.toLowerCase();
+  speak(q.fullSentence, false);
+  if (ok) {
+    btn.classList.add('correct');
+    $("typeFeedback").innerHTML =
+      '<div class="feedback-box correct">' + q.fullSentence +
+      '<span class="fb-trans">' + q.translation + '</span></div>';
+    setTimeout(() => nextItem(true), 1400);
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.opt-btn').forEach(b => {
+      if (b.textContent.toLowerCase() === q.answer.toLowerCase()) b.classList.add('correct');
+    });
+    $("typeFeedback").innerHTML =
+      '<div class="feedback-box wrong">' + q.fullSentence +
+      '<span class="fb-trans">' + q.translation + '</span></div>';
+    setTimeout(() => nextItem(false), 2000);
+  }
+}
+function nextItem(ok) {
+  const c = pool.shift();
+  if (ok) { learnedCount++; learnedSet.add(c.sentence); saveStorage(); }
+  else { errorCount++; sessionMistakes.set(c.sentence, c); pool.push(c); }
+  answered = false;
+  renderCard();
+}
+renderModesBar();
+loadStorage();
+updateMuteBtn();
+resetSession();
+</script>
+</body>
+</html>
+
