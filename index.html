@@ -116,15 +116,20 @@
   .modal-body { overflow-y: auto; padding-right: 4px; margin-bottom: 10px; }
   .modal-body ul { margin: 0; padding-left: 16px; display: flex; flex-direction: column; gap: 6px; }
     #gameArea { display: flex; flex-direction: column; flex-shrink: 0; }
+  .stats, .footer-bar { flex-shrink: 0; }
   @media (min-width: 640px) {
     .wrap { max-width: 960px; flex-direction: row; align-items: stretch; }
     .panel-top { width: 45%; overflow-y: auto; }
-    .panel-main { width: 55%; overflow-y: auto; }
-    .panel-main .word-box { padding: 8px 10px; margin-bottom: 5px; }
-    .panel-main .feedback-box { margin-top: 5px; padding: 6px 10px; }
+    .panel-main { width: 55%; overflow-y: auto; padding: 8px 12px; }
+    .panel-main .header-row { margin-bottom: 4px; min-height: 28px; }
+    .panel-main .word-box { padding: 7px 10px; margin-bottom: 5px; }
+    .panel-main .sentence { font-size: 16.5px; }
+    .panel-main .answer-input { height: 34px; }
+    .panel-main .feedback-box { margin-top: 5px; padding: 5px 10px; font-size: 12.5px; }
     .panel-main .buttons { margin-top: 5px; }
-    .panel-main .stats { margin-top: 6px; padding-top: 5px; }
-    .panel-main .footer-bar { padding-top: 6px; }
+    .panel-main .btn-primary, .panel-main .btn-success, .panel-main .btn-wrong, .panel-main .btn-secondary { height: 34px; }
+    .panel-main .stats { margin-top: 6px; padding-top: 4px; }
+    .panel-main .footer-bar { padding-top: 4px; }
   }
 
 
@@ -745,6 +750,7 @@ resetSession();
 </script>
 </body>
 </html>
+
 
 
 
