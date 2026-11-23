@@ -6,70 +6,77 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=overlays-content">
 <meta name="theme-color" content="#1e3c72">
 <title>Partitiivi ja Genetiivi — Грамматика A1</title>
-
 <style>
   :root {
     --primary: #2a5298; --primary-dark: #1e3c72; --primary-light: #e8eef7;
+    --bg-grad-start: #1e3c72; --bg-grad-end: #2a5298;
+    --panel-bg: #ffffff; --surface-bg: #f7f9fc; --surface-alt: #f0f4fa;
+    --surface-prog: #f4f7fc; --surface-note: #f8fafc; --surface-th: #edf2fa;
+    --border-color: #eef2f7; --border-input: #d0dbe8; --border-tab: #dbe5f4;
+    --text-main: #222222; --text-muted: #666666; --text-subtle: #888888;
+    --text-body: #334155; --text-trans: #475569;
     --gen-bg: #f0e6ff; --gen-text: #6b2fa8; --part-bg: #e3f0ff; --part-text: #1e5aa8;
     --success-bg: #e6f7ec; --success-text: #1a7f3c; --success-border: #7ed3a0;
     --error-bg: #fdecec; --error-text: #b32d2d; --error-border: #f5a3a3;
     --btn-h: 38px;
   }
+  body.dark {
+    --primary: #4c82f7; --primary-dark: #93c5fd; --primary-light: #1e293b;
+    --bg-grad-start: #090d16; --bg-grad-end: #111827;
+    --panel-bg: #161f30; --surface-bg: #1e293b; --surface-alt: #263349;
+    --surface-prog: #1e293b; --surface-note: #1e293b; --surface-th: #263349;
+    --border-color: #2e3c54; --border-input: #334155; --border-tab: #334155;
+    --text-main: #f1f5f9; --text-muted: #94a3b8; --text-subtle: #64748b;
+    --text-body: #cbd5e1; --text-trans: #94a3b8;
+    --gen-bg: #311d4a; --gen-text: #d8b4fe; --part-bg: #1e3a5f; --part-text: #7dd3fc;
+    --success-bg: #112e21; --success-text: #4ade80; --success-border: #166534;
+    --error-bg: #331619; --error-text: #f87171; --error-border: #7f1d1d;
+  }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { height: 100dvh; margin: 0; padding: 0; overflow: hidden; }
   body {
     font-family: -apple-system, 'Segoe UI', Roboto, system-ui, sans-serif;
-    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
-    padding: 6px; display: flex; flex-direction: column; align-items: center; color: #222;
+    background: linear-gradient(135deg, var(--bg-grad-start) 0%, var(--bg-grad-end) 100%);
+    padding: 6px; display: flex; flex-direction: column; align-items: center; color: var(--text-main);
   }
   .wrap { max-width: 540px; width: 100%; height: 100%; display: flex; flex-direction: column; gap: 5px; }
-  .panel { background: #fff; border-radius: 18px; box-shadow: 0 10px 32px rgba(0,0,0,0.22); padding: 10px 12px; width: 100%; }
+  .panel { background: var(--panel-bg); border-radius: 18px; box-shadow: 0 10px 32px rgba(0,0,0,0.22); padding: 10px 12px; width: 100%; }
   .panel-top { flex-shrink: 0; padding-bottom: 9px; }
   .panel-main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
-
   .icon { width: 15px; height: 15px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
   .icon-md { width: 17px; height: 17px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
   .icon-lg { width: 28px; height: 28px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 4px; }
-
-  .section-head { display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 700; color: #666; text-transform: uppercase; margin-bottom: 5px; }
+  .section-head { display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px; }
   .link-btn { background: none; border: none; color: var(--primary); font-size: 11.5px; font-weight: 600; cursor: pointer; text-decoration: underline; padding: 0; }
-
   .topic-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-bottom: 6px; }
-  .chip { height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 9px; font-size: 12.5px; font-weight: 700; background: #f0f4fa; color: var(--primary); cursor: pointer; user-select: none; border: 1.5px solid #dbe5f4; }
+  .chip { height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 9px; font-size: 12.5px; font-weight: 700; background: var(--surface-alt); color: var(--primary); cursor: pointer; user-select: none; border: 1.5px solid var(--border-tab); }
   .chip.active { background: var(--primary); color: #fff; border-color: var(--primary); }
-
-  .global-progress { display: flex; justify-content: space-between; align-items: center; background: #f4f7fc; padding: 5px 10px; border-radius: 9px; font-size: 11.5px; color: #444; margin-bottom: 6px; }
-
+  .global-progress { display: flex; justify-content: space-between; align-items: center; background: var(--surface-prog); padding: 5px 10px; border-radius: 9px; font-size: 11.5px; color: var(--text-body); margin-bottom: 6px; }
   .controls-stack { display: flex; flex-direction: column; gap: 5px; }
   .modes-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
   .settings-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; }
-  .mode-btn { height: var(--btn-h); border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 5px; padding: 0 4px; border: 1.5px solid #dbe5f4; background: #f0f4fa; color: var(--primary); }
+  .mode-btn { height: var(--btn-h); border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 5px; padding: 0 4px; border: 1.5px solid var(--border-tab); background: var(--surface-alt); color: var(--primary); }
   .mode-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
-  .mini-btn { height: var(--btn-h); border-radius: 10px; font-weight: 700; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 4px; padding: 0 4px; border: 1.5px solid var(--primary); background: #fff; color: var(--primary); }
-  .mini-btn.muted { border-color: #cbd5e1; color: #888; background: #f8fafc; }
+  .mini-btn { height: var(--btn-h); border-radius: 10px; font-weight: 700; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 4px; padding: 0 4px; border: 1.5px solid var(--primary); background: var(--panel-bg); color: var(--primary); }
+  .mini-btn.muted { border-color: var(--border-input); color: var(--text-subtle); background: var(--surface-bg); }
   .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; min-height: 30px; gap: 6px; }
   .tag { font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; white-space: nowrap; }
   .tag.part { background: var(--part-bg); color: var(--part-text); }
   .tag.gen { background: var(--gen-bg); color: var(--gen-text); }
-
   .umlauts { display: flex; gap: 5px; }
   .umlaut-btn { height: 30px; width: 34px; font-size: 15px; font-weight: 700; background: var(--primary-light); color: var(--primary-dark); border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; border: none; cursor: pointer; }
-  .btn-speak { height: 30px; width: 36px; display: inline-flex; align-items: center; justify-content: center; background: #fff; border: 1.5px solid var(--primary); color: var(--primary); padding: 0; border-radius: 8px; cursor: pointer; }
+  .btn-speak { height: 30px; width: 36px; display: inline-flex; align-items: center; justify-content: center; background: var(--panel-bg); border: 1.5px solid var(--primary); color: var(--primary); padding: 0; border-radius: 8px; cursor: pointer; }
   .btn-speak:disabled { opacity: 0.5; cursor: default; }
-
-  .word-box { text-align: center; padding: 12px 10px; background: #f7f9fc; border-radius: 13px; border: 1px solid #eef2f7; margin-bottom: 7px; }
+  .word-box { text-align: center; padding: 12px 10px; background: var(--surface-bg); border-radius: 13px; border: 1px solid var(--border-color); margin-bottom: 7px; }
   .sentence { font-size: 18px; font-weight: 600; color: var(--primary-dark); line-height: 1.4; }
   .blank { color: var(--primary); font-weight: 700; border-bottom: 2px dashed var(--primary); padding: 0 6px; }
-  .base-word { color: #64748b; font-weight: 500; font-size: 16px; }
-
-  .answer-input { height: 38px; width: 100%; padding: 0 12px; font-size: 16px; border: 2px solid #d0dbe8; border-radius: 10px; outline: none; text-align: center; }
+  .base-word { color: var(--text-muted); font-weight: 500; font-size: 16px; }
+  .answer-input { height: 38px; width: 100%; padding: 0 12px; font-size: 16px; border: 2px solid var(--border-input); background: var(--panel-bg); color: var(--text-main); border-radius: 10px; outline: none; text-align: center; }
   .answer-input:focus { border-color: var(--primary); }
-
   .options-grid { display: flex; flex-direction: column; gap: 6px; }
-  .opt-btn { min-height: 38px; width: 100%; padding: 7px 14px; font-size: 14px; font-weight: 600; text-align: left; background: #fff; border: 2px solid #d0dbe8; color: #222; border-radius: 10px; cursor: pointer; }
+  .opt-btn { min-height: 38px; width: 100%; padding: 7px 14px; font-size: 14px; font-weight: 600; text-align: left; background: var(--panel-bg); border: 2px solid var(--border-input); color: var(--text-main); border-radius: 10px; cursor: pointer; }
   .opt-btn.correct { background: var(--success-bg); color: var(--success-text); border-color: var(--success-border); }
   .opt-btn.wrong { background: var(--error-bg); color: var(--error-text); border-color: var(--error-border); }
-
   button { font-family: inherit; border: none; cursor: pointer; }
   .buttons { display: flex; gap: 6px; margin-top: 7px; }
   .btn-primary, .btn-success, .btn-wrong, .btn-secondary { height: var(--btn-h); flex: 1; border-radius: 10px; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 5px; padding: 0 8px; }
@@ -77,44 +84,38 @@
   .btn-success { background: var(--success-text); color: #fff; }
   .btn-wrong { background: var(--error-text); color: #fff; }
   .btn-secondary { background: var(--primary-light); color: var(--primary); }
-
   .feedback-box { margin-top: 7px; padding: 8px 10px; border-radius: 10px; font-size: 13px; line-height: 1.35; text-align: center; }
   .feedback-box.correct { background: var(--success-bg); color: var(--success-text); border: 1.5px solid var(--success-border); }
   .feedback-box.wrong { background: var(--error-bg); color: var(--error-text); border: 1.5px solid var(--error-border); }
-  .fb-trans { font-style: italic; color: #475569; font-size: 12px; margin-top: 3px; display: block; }
-
-  .stats { margin-top: 8px; padding-top: 6px; border-top: 1px solid #f0f2f5; font-size: 11.5px; color: #666; display: flex; justify-content: space-between; font-weight: 600; }
+  .fb-trans { font-style: italic; color: var(--text-trans); font-size: 12px; margin-top: 3px; display: block; }
+  .stats { margin-top: 8px; padding-top: 6px; border-top: 1px solid var(--border-color); font-size: 11.5px; color: var(--text-muted); display: flex; justify-content: space-between; font-weight: 600; }
   .err-stat { color: var(--error-text); }
-  .footer-bar { margin-top: auto; padding-top: 8px; display: flex; justify-content: space-between; align-items: center; color: #888; font-size: 11px; }
-
+  .footer-bar { margin-top: auto; padding-top: 8px; display: flex; justify-content: space-between; align-items: center; color: var(--text-subtle); font-size: 11px; }
   #gameArea { display: flex; flex-direction: column; flex: 1; min-height: 0; }
-  .rules-scroll { overflow-y: auto; flex: 1; padding-right: 2px; font-size: 12.5px; line-height: 1.4; color: #334155; }
+  .rules-scroll { overflow-y: auto; flex: 1; padding-right: 2px; font-size: 12.5px; line-height: 1.4; color: var(--text-body); }
   .tabs { display: flex; gap: 6px; margin-bottom: 10px; flex-shrink: 0; }
-  .tab-btn { flex: 1; height: 34px; border-radius: 9px; background: #f0f4fa; color: var(--primary); font-weight: 700; font-size: 13px; border: 1.5px solid #dbe5f4; }
+  .tab-btn { flex: 1; height: 34px; border-radius: 9px; background: var(--surface-alt); color: var(--primary); font-weight: 700; font-size: 13px; border: 1.5px solid var(--border-tab); }
   .tab-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
   .tab-content { display: none; }
   .tab-content.active { display: block; }
   .rules-title { font-size: 13.5px; font-weight: 700; color: var(--primary-dark); margin: 10px 0 5px; }
   .rules-title:first-child { margin-top: 0; }
-  .rules-note { background: #f8fafc; padding: 8px 10px; border-radius: 8px; border-left: 3px solid var(--primary); margin-bottom: 8px; display: block; }
+  .rules-note { background: var(--surface-note); padding: 8px 10px; border-radius: 8px; border-left: 3px solid var(--primary); margin-bottom: 8px; display: block; }
   .tab-content > .rules-title:first-child + .rules-note { min-height: 92px; }
   .rules-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 8px; }
-  .rules-table th { text-align: left; padding: 6px 8px; background: #edf2fa; color: var(--primary-dark); }
-  .rules-table td { padding: 6px 8px; border-bottom: 1px solid #eef2f7; }
+  .rules-table th { text-align: left; padding: 6px 8px; background: var(--surface-th); color: var(--primary-dark); }
+  .rules-table td { padding: 6px 8px; border-bottom: 1px solid var(--border-color); }
   .ex-gen { color: var(--gen-text); font-weight: 700; }
   .ex-part { color: var(--part-text); font-weight: 700; }
-
   .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); display: none; align-items: center; justify-content: center; padding: 10px; z-index: 999; }
   .modal-overlay.open { display: flex; }
-  .modal-box { background: #fff; border-radius: 18px; padding: 14px; width: 100%; max-width: 480px; max-height: 88dvh; display: flex; flex-direction: column; box-shadow: 0 20px 50px rgba(0,0,0,0.3); font-size: 12.5px; line-height: 1.4; color: #334155; }
+  .modal-box { background: var(--panel-bg); border-radius: 18px; padding: 14px; width: 100%; max-width: 480px; max-height: 88dvh; display: flex; flex-direction: column; box-shadow: 0 20px 50px rgba(0,0,0,0.3); font-size: 12.5px; line-height: 1.4; color: var(--text-body); }
   .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
   .modal-head h2 { margin: 0; font-size: 16px; color: var(--primary-dark); }
-  .modal-close { background: #f0f4fa; color: var(--primary); width: 30px; height: 30px; border-radius: 8px; font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+  .modal-close { background: var(--surface-alt); color: var(--primary); width: 30px; height: 30px; border-radius: 8px; font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
   .modal-body { overflow-y: auto; padding-right: 4px; margin-bottom: 10px; }
   .modal-body ul { margin: 0; padding-left: 16px; display: flex; flex-direction: column; gap: 6px; }
 </style>
-
-
 </head>
 <body>
 <div class="wrap">
@@ -125,7 +126,7 @@
       <div class="chip" onclick="setTopic('gen', this)">Genetiivi</div>
       <div class="chip" onclick="setTopic('part', this)">Partitiivi</div>
     </div>
-       <div class="global-progress">
+    <div class="global-progress">
       <span id="globalStatText">Освоено: 0 из 0</span>
       <button class="link-btn" style="color:var(--error-text)" onclick="clearProgress()">Сбросить прогресс</button>
     </div>
@@ -146,13 +147,15 @@
     </div>
     <div class="footer-bar">
       <span>Грамматика финского языка · A1</span>
-      <button type="button" class="link-btn" onclick="toggleModal('helpModal', true)">Справка</button>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button type="button" class="link-btn" id="themeBtn" onclick="toggleTheme()">Тёмная тема</button>
+        <span>·</span>
+        <button type="button" class="link-btn" onclick="toggleModal('helpModal', true)">Справка</button>
+      </div>
     </div>
   </div>
 </div>
 
-
- 
 <div class="modal-overlay" id="helpModal" onclick="if(event.target===this)toggleModal('helpModal',false)">
   <div class="modal-box">
     <div class="modal-head">
@@ -177,8 +180,6 @@
     <button type="button" class="btn-primary" style="width:100%; flex:none;" onclick="toggleModal('helpModal',false)">Понятно</button>
   </div>
 </div>
-
-
 
 <script>
 const questions = [
@@ -228,7 +229,7 @@ const questions = [
   { type: "part", sentence: "Hän ei juo [...] (tee).", answer: "teetä", hint: "Отрицание + 2 гласные → partitiivi на -tä", fullSentence: "Hän ei juo teetä.", translation: "Он/она не пьёт чай." },
   { type: "gen", sentence: "[...] (Veli) vaimo on suomalainen.", answer: "Veljen", hint: "Genetiivi: «жена брата» (veli → velje-)", fullSentence: "Veljen vaimo on suomalainen.", translation: "Жена брата — финка." },
   { type: "gen", sentence: "[...] (Sisko) poika on viisi vuotta vanha.", answer: "Siskon", hint: "Genetiivi: «сын сестры»", fullSentence: "Siskon poika on viisi vuotta vanha.", translation: "Сыну сестры пять лет." },
-  { type: "part", sentence: "Rakastan [...] (hän) todella paljon.", answer: "häntä", hint: "Глагол rakastaa + местоимение hän в partitiivi", fullSentence: "Rakastan häntä todella paljon.", translation: "Я люблю его/её очень сильно." },
+    { type: "part", sentence: "Rakastan [...] (hän) todella paljon.", answer: "häntä", hint: "Глагол rakastaa + местоимение hän в partitiivi", fullSentence: "Rakastan häntä todella paljon.", translation: "Я люблю его/её очень сильно." },
   { type: "part", sentence: "Meillä on kolme [...] (huone).", answer: "huonetta", hint: "Число 3 + слово на -e → partitiivi на -tta", fullSentence: "Meillä on kolme huonetta.", translation: "У нас три комнаты." },
   { type: "part", sentence: "Onko sinulla [...] (sisarus)?", answer: "sisarusta", hint: "Вопрос о наличии (обычно partitiivi)", fullSentence: "Onko sinulla sisarusta?", translation: "Есть ли у тебя брат или сестра?" },
   { type: "gen", sentence: "[...] (Talo) edessä on iso puu.", answer: "Talon", hint: "Genetiivi + послелог edessä (перед домом)", fullSentence: "Talon edessä on iso puu.", translation: "Перед домом растёт большое дерево." },
@@ -283,8 +284,11 @@ const questions = [
   { type: "gen", sentence: "[...] (Auto) moottori on uusi.", answer: "Auton", hint: "Genetiivi: «мотор машины»", fullSentence: "Auton moottori on uusi.", translation: "Мотор машины новый." },
   { type: "part", sentence: "En tarvitse [...] (apu) nyt.", answer: "apua", hint: "Отрицание + глагол tarvita → partitiivi", fullSentence: "En tarvitse apua nyt.", translation: "Мне сейчас не нужна помощь." }
 ];
+
+
 const $ = id => document.getElementById(id);
-const STORAGE_KEY = 'sm1_cases_learned_v1', MUTE_KEY = 'sm1_cases_muted_v1';
+const STORAGE_KEY = 'sm1_cases_learned_v1', MUTE_KEY = 'sm1_cases_muted_v1', THEME_KEY = 'sm1_theme_v1';
+let isDark = false;
 const svg = (p, c = 'icon') => '<svg class="' + c + '" viewBox="0 0 24 24">' + p + '</svg>';
 const ICONS = {
   book: svg('<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>'),
@@ -330,7 +334,6 @@ const RULES_HTML =
     '</div>' +
   '</div>';
 
-
 let learnedSet = new Set(), isMuted = false, selectedTopic = 'all';
 let currentMode = 'typing', roundLimit = 10;
 let pool = [], totalInRound = 0, learnedCount = 0, errorCount = 0, answered = false;
@@ -340,13 +343,27 @@ function loadStorage() {
   try {
     learnedSet = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
     isMuted = localStorage.getItem(MUTE_KEY) === '1';
+    isDark = localStorage.getItem(THEME_KEY) === 'dark';
   } catch (e) {}
 }
 function saveStorage() {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify([...learnedSet]));
     localStorage.setItem(MUTE_KEY, isMuted ? '1' : '0');
+    localStorage.setItem(THEME_KEY, isDark ? 'dark' : 'light');
   } catch (e) {}
+}
+function applyTheme() {
+  document.body.classList.toggle('dark', isDark);
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  if (metaTheme) metaTheme.setAttribute('content', isDark ? '#090d16' : '#1e3c72');
+  const btn = $("themeBtn");
+  if (btn) btn.textContent = isDark ? 'Светлая тема' : 'Тёмная тема';
+}
+function toggleTheme() {
+  isDark = !isDark;
+  saveStorage();
+  applyTheme();
 }
 function clearProgress() {
   if (!confirm('Сбросить прогресс для выбранного раздела?')) return;
@@ -368,14 +385,12 @@ function setTopic(t, el) {
   el.classList.add('active');
   resetSession();
 }
-
 function toggleMute() { isMuted = !isMuted; saveStorage(); updateMuteBtn(); }
 function updateMuteBtn() {
   const b = $("muteBtn");
   b.innerHTML = (isMuted ? ICONS.volOff : ICONS.volOn) + ' Звук';
   b.classList.toggle('muted', isMuted);
 }
-
 function renderModesBar() {
   $("modesBar").innerHTML =
     '<button class="mode-btn" id="btnRules" onclick="setMode(\'rules\')">' + ICONS.book + ' Правила</button>' +
@@ -388,22 +403,14 @@ function setMode(m) {
   $("btnRules").classList.toggle('active', m === 'rules');
   $("btnQuiz").classList.toggle('active', m === 'quiz');
   $("btnTyping").classList.toggle('active', m === 'typing');
-  if (m === 'rules') {
-    renderCard();
-  } else if (prevMode === 'rules') {
-    renderCard();
-  } else {
-    resetSession();
-  }
+  if (m === 'rules' || prevMode === 'rules') renderCard();
+  else resetSession();
 }
-
 function toggleRoundSize() {
   roundLimit = roundLimit === 10 ? 20 : roundLimit === 20 ? 0 : 10;
   $("sizeBtn").textContent = roundLimit ? roundLimit + ' слов' : 'Все слова';
   resetSession();
 }
-
-
 function resetSession(onlyM = false, all = false) {
   if (onlyM && sessionMistakes.size > 0) {
     pool = [...sessionMistakes.values()].sort(() => Math.random() - 0.5);
@@ -420,6 +427,7 @@ function resetSession(onlyM = false, all = false) {
   answered = false;
   renderCard();
 }
+
 function speak(text, manual = false) {
   if ((isMuted && !manual) || isSpeaking) return;
   const btn = $("speakBtn");
@@ -456,36 +464,73 @@ function speak(text, manual = false) {
   } else runFallback();
   setTimeout(() => { if (isSpeaking) reset(); }, 4000);
 }
+
+const SPECIAL_FORMS = {
+  'minä': ['minun', 'minua', 'minä', 'minusta'],
+  'sinä': ['sinun', 'sinua', 'sinä', 'sinusta'],
+  'hän': ['hänen', 'häntä', 'hän', 'hänestä'],
+  'me': ['meidän', 'meitä', 'me', 'meistä'],
+  'te': ['teidän', 'teitä', 'te', 'teistä'],
+  'he': ['heidän', 'heitä', 'he', 'heistä'],
+  'mies': ['miehen', 'miestä', 'mies', 'mieheä'],
+  'lapsi': ['lapsen', 'lasta', 'lapsi', 'lapsia'],
+  'veli': ['veljen', 'veljeä', 'veli', 'velin'],
+  'poika': ['pojan', 'poikaa', 'poika', 'poikan'],
+  'tyttö': ['tytön', 'tyttöä', 'tyttö', 'tyttön'],
+  'äiti': ['äidin', 'äitiä', 'äiti', 'äitin'],
+  'nainen': ['naisen', 'naista', 'nainen', 'nainenia'],
+  'huone': ['huoneen', 'huonetta', 'huone', 'huonea'],
+  'perhe': ['perheen', 'perhettä', 'perhe', 'perheä'],
+  'kirje': ['kirjeen', 'kirjettä', 'kirje', 'kirjeä'],
+  'kiire': ['kiireen', 'kiirettä', 'kiire', 'kiireä'],
+  'suomi': ['suomen', 'suomea', 'suomi', 'suomia'],
+  'lehti': ['lehden', 'lehteä', 'lehti', 'lehtin'],
+  'helsinki': ['helsingin', 'helsinkiä', 'helsinki', 'helsinkin'],
+  'nuori nainen': ['nuoren naisen', 'nuorta naista', 'nuori nainen', 'nuorin naisen']
+};
+
 function getQuizOptions(q) {
   const baseMatch = q.sentence.match(/\(([^)]+)\)/);
-  const baseWord = baseMatch ? baseMatch[1].toLowerCase() : '';
-  const fake = new Set();
-  if (baseWord) {
-    fake.add(baseWord);
-    fake.add(baseWord + 'n');
-    fake.add(baseWord + 'a');
-    fake.add(baseWord + 'ä');
-    fake.add(baseWord + 'ta');
-    fake.add(baseWord + 'tä');
+  const rawBase = baseMatch ? baseMatch.at(1).trim() : '';
+  const lowBase = rawBase.toLowerCase();
+  const isCap = /^[A-ZÄÖÅ]/.test(q.answer);
+  const formatCase = s => isCap ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+
+  const candidates = new Set();
+  if (SPECIAL_FORMS[lowBase]) {
+    SPECIAL_FORMS[lowBase].forEach(f => candidates.add(formatCase(f)));
   }
-  const sameType = questions
-    .filter(x => x.type === q.type && x.answer.toLowerCase() !== q.answer.toLowerCase())
-    .map(x => x.answer);
-  const poolOpts = [...fake, ...sameType]
-    .filter(w => w.toLowerCase() !== q.answer.toLowerCase())
-    .sort(() => Math.random() - 0.5);
-  const unique = [];
-  const used = new Set([q.answer.toLowerCase()]);
-  for (const w of poolOpts) {
-    if (!used.has(w.toLowerCase())) {
-      unique.push(w);
-      used.add(w.toLowerCase());
-      if (unique.length === 3) break;
+
+  if (lowBase) {
+    const isFront = /[äöy]/.test(lowBase) && !/[aou]/.test(lowBase);
+    const v = isFront ? 'ä' : 'a';
+    const stem = lowBase.endsWith('i') ? lowBase.slice(0, -1) + 'e' : lowBase;
+
+    candidates.add(formatCase(lowBase));
+    candidates.add(formatCase(stem + 'n'));
+    candidates.add(formatCase(lowBase + v));
+    candidates.add(formatCase(lowBase + 't' + v));
+    candidates.add(formatCase(lowBase + 'tt' + v));
+    candidates.add(formatCase(stem + v));
+
+    const kpt = lowBase
+      .replace(/kk/g, 'k').replace(/pp/g, 'p').replace(/tt/g, 't')
+      .replace(/nk/g, 'ng').replace(/nt/g, 'nn').replace(/lt/g, 'll').replace(/rt/g, 'rr');
+    if (kpt !== lowBase) {
+      const kptStem = kpt.endsWith('i') ? kpt.slice(0, -1) + 'e' : kpt;
+      candidates.add(formatCase(kptStem + 'n'));
+      candidates.add(formatCase(kpt + v));
     }
   }
-  return [q.answer, ...unique].sort(() => Math.random() - 0.5);
-}
 
+  const ansLow = q.answer.toLowerCase();
+  const distractors = [...candidates]
+    .filter(w => w.toLowerCase() !== ansLow)
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 3);
+
+  return [q.answer, ...distractors].sort(() => Math.random() - 0.5);
+}
 function renderCard() {
   const inT = questions.filter(q => selectedTopic === 'all' || q.type === selectedTopic);
   const done = inT.filter(q => learnedSet.has(q.sentence)).length;
@@ -494,15 +539,14 @@ function renderCard() {
   $("errorsText").textContent = 'Ошибок: ' + errorCount;
   $("learnedText").textContent = 'В раунде: ' + learnedCount + ' / ' + totalInRound;
   const area = $("gameArea");
-  
-    const statsBar = document.querySelector('.stats');
+
+  const statsBar = document.querySelector('.stats');
   if (currentMode === 'rules') {
     statsBar.style.display = 'none';
     area.innerHTML = RULES_HTML;
     return;
   }
   statsBar.style.display = 'flex';
-
 
   if (!pool.length) {
     if (totalInRound === 0) {
@@ -518,7 +562,7 @@ function renderCard() {
     area.innerHTML =
       '<div class="word-box"><div style="color:var(--success-text)">' + ICONS.trophy + '</div>' +
       '<div class="sentence" style="color:var(--success-text)">Hyvää työtä!</div>' +
-      '<div style="font-size:13px;color:#555;margin-top:6px;">Раунд завершён! Ошибок: <b>' + errorCount + '</b></div></div>' +
+      '<div style="font-size:13px;color:var(--text-muted);margin-top:6px;">Раунд завершён! Ошибок: <b>' + errorCount + '</b></div></div>' +
       '<div class="buttons">' +
       (mArr.length ? '<button class="btn-wrong" onclick="resetSession(true)">Повторить ошибки</button>' : '') +
       '<button class="btn-primary" onclick="resetSession(false)">Следующий раунд →</button></div>';
@@ -561,7 +605,8 @@ function renderCard() {
       '<div class="word-box"><div class="sentence">' + sentHtml + '</div></div>' +
       '<div class="options-grid">' +
       opts.map(o => '<button class="opt-btn" onclick="checkQuiz(this,\'' + o.replace(/'/g, "\\'") + '\')">' + o + '</button>').join('') +
-      '</div><div id="typeFeedback"></div>';
+      '</div><div id="typeFeedback"></div>' +
+      '<div class="buttons" id="typeBtns" style="display:none;"></div>';
   }
 }
 
@@ -603,13 +648,15 @@ function checkQuiz(btn, chosen) {
   answered = true;
   document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
   const q = pool.at(0), ok = chosen.toLowerCase() === q.answer.toLowerCase();
+  const btns = $("typeBtns");
   speak(q.fullSentence, false);
+
   if (ok) {
     btn.classList.add('correct');
     $("typeFeedback").innerHTML =
       '<div class="feedback-box correct">' + q.fullSentence +
       '<span class="fb-trans">' + q.translation + '</span></div>';
-    setTimeout(() => nextItem(true), 1400);
+    btns.innerHTML = '<button class="btn-success" onclick="nextItem(true)">Дальше →</button>';
   } else {
     btn.classList.add('wrong');
     document.querySelectorAll('.opt-btn').forEach(b => {
@@ -618,9 +665,11 @@ function checkQuiz(btn, chosen) {
     $("typeFeedback").innerHTML =
       '<div class="feedback-box wrong">' + q.fullSentence +
       '<span class="fb-trans">' + q.translation + '</span></div>';
-    setTimeout(() => nextItem(false), 2000);
+    btns.innerHTML = '<button class="btn-wrong" onclick="nextItem(false)">Дальше →</button>';
   }
+  btns.style.display = 'flex';
 }
+
 function nextItem(ok) {
   const c = pool.shift();
   if (ok) { learnedCount++; learnedSet.add(c.sentence); saveStorage(); }
@@ -628,11 +677,12 @@ function nextItem(ok) {
   answered = false;
   renderCard();
 }
+
 renderModesBar();
 loadStorage();
+applyTheme();
 updateMuteBtn();
 resetSession();
 </script>
 </body>
 </html>
-
