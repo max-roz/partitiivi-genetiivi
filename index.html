@@ -115,11 +115,12 @@
   .modal-close { background: var(--surface-alt); color: var(--primary); width: 30px; height: 30px; border-radius: 8px; font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
   .modal-body { overflow-y: auto; padding-right: 4px; margin-bottom: 10px; }
   .modal-body ul { margin: 0; padding-left: 16px; display: flex; flex-direction: column; gap: 6px; }
-  @media (orientation: landscape) and (max-height: 650px) {
-  .wrap { max-width: 100%; flex-direction: row; align-items: stretch; }
-  .panel-top { width: 46%; overflow-y: auto; }
-  .panel-main { width: 54%; overflow-y: auto; }
-}
+   @media (min-width: 640px) {
+    .wrap { max-width: 960px; flex-direction: row; align-items: stretch; }
+    .panel-top { width: 45%; overflow-y: auto; }
+    .panel-main { width: 55%; overflow-y: auto; }
+  }
+
 
 
 </style>
@@ -737,5 +738,6 @@ resetSession();
 </script>
 </body>
 </html>
+
 
 
