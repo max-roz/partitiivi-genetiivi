@@ -115,11 +115,18 @@
   .modal-close { background: var(--surface-alt); color: var(--primary); width: 30px; height: 30px; border-radius: 8px; font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
   .modal-body { overflow-y: auto; padding-right: 4px; margin-bottom: 10px; }
   .modal-body ul { margin: 0; padding-left: 16px; display: flex; flex-direction: column; gap: 6px; }
-   @media (min-width: 640px) {
+    #gameArea { display: flex; flex-direction: column; flex-shrink: 0; }
+  @media (min-width: 640px) {
     .wrap { max-width: 960px; flex-direction: row; align-items: stretch; }
     .panel-top { width: 45%; overflow-y: auto; }
     .panel-main { width: 55%; overflow-y: auto; }
+    .panel-main .word-box { padding: 8px 10px; margin-bottom: 5px; }
+    .panel-main .feedback-box { margin-top: 5px; padding: 6px 10px; }
+    .panel-main .buttons { margin-top: 5px; }
+    .panel-main .stats { margin-top: 6px; padding-top: 5px; }
+    .panel-main .footer-bar { padding-top: 6px; }
   }
+
 
 
 
@@ -738,6 +745,7 @@ resetSession();
 </script>
 </body>
 </html>
+
 
 
 
