@@ -115,6 +115,12 @@
   .modal-close { background: var(--surface-alt); color: var(--primary); width: 30px; height: 30px; border-radius: 8px; font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
   .modal-body { overflow-y: auto; padding-right: 4px; margin-bottom: 10px; }
   .modal-body ul { margin: 0; padding-left: 16px; display: flex; flex-direction: column; gap: 6px; }
+  @media (orientation: landscape) and (max-height: 550px) {
+    .wrap { max-width: 100%; flex-direction: row; align-items: stretch; }
+    .panel-top { width: 46%; overflow-y: auto; }
+    .panel-main { width: 54%; overflow-y: auto; }
+  }
+
 </style>
 </head>
 <body>
@@ -169,11 +175,12 @@
           — <b>Ввод</b>: впишите нужную форму слова (кнопки <i>ä, ö, å</i> расположены над предложением);<br>
           — <b>Тест</b>: выбор правильной падежной формы из 4 похожих вариантов.
         </li>
-        <li><b>Управление:</b><br>
+                <li><b>Управление:</b><br>
           — <b>Звук</b>: автоозвучка предложения после ответа (кнопка с облачком озвучивает в любой момент);<br>
-          — <b>10 вопр.</b>: выбор количества вопросов в раунде;<br>
-          — <b>Правила</b>: быстрая шпаргалка с таблицами окончаний и глаголами.
+          — <b>10 слов</b>: выбор количества вопросов в раунде;<br>
+          — <b>Правила</b>: вкладка со шпаргалкой по окончаниям и глаголам.
         </li>
+
         <li><b>Прогресс:</b> верно решённые с первой попытки предложения сохраняются в памяти браузера.</li>
       </ul>
     </div>
@@ -428,42 +435,83 @@ function resetSession(onlyM = false, all = false) {
   renderCard();
 }
 
+let iosAudioUnlocked = false;
+document.addEventListener('touchstart', () => {
+  if (!iosAudioUnlocked && 'speechSynthesis' in window) {
+    window.speechSynthesis.getVoices();
+    iosAudioUnlocked = true;
+  }
+}, { once: true });
+
+if ('speechSynthesis' in window) {
+  window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+}
+
 function speak(text, manual = false) {
   if ((isMuted && !manual) || isSpeaking) return;
   const btn = $("speakBtn");
   let fallbackCalled = false;
+
   const reset = () => {
     isSpeaking = false;
     if (btn) { btn.disabled = false; btn.innerHTML = ICONS.speak; }
   };
+
   isSpeaking = true;
   if (btn) { btn.disabled = true; btn.innerHTML = ICONS.speak; }
+
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
   if (currentAudio) {
     currentAudio.onended = null;
     currentAudio.onerror = null;
     currentAudio.pause();
     currentAudio = null;
   }
-  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  if (!isIOS && 'speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+  }
+
   const runFallback = () => {
     if (fallbackCalled) return;
     fallbackCalled = true;
     currentAudio = null;
     if (!('speechSynthesis' in window)) { reset(); return; }
+
+    window.speechSynthesis.resume();
     const u = new SpeechSynthesisUtterance(text);
-    const vs = window.speechSynthesis.getVoices().filter(v => v.lang.toLowerCase().includes('fi'));
-    const best = vs.find(v => v.name.includes('Natural') || v.name.includes('Online')) || vs.at(0);
-    if (best) u.voice = best;
-    u.lang = 'fi-FI'; u.rate = 0.9; u.onend = reset; u.onerror = reset;
+    const voices = window.speechSynthesis.getVoices();
+    const langVoices = voices.filter(v => v.lang.toLowerCase().startsWith('fi'));
+    const best = langVoices.find(v => /natural|online|satu|enhanced|premium/i.test(v.name)) || langVoices.at(0);
+
+    if (best) {
+      u.voice = best;
+      u.lang = best.lang;
+    } else {
+      u.lang = 'fi-FI';
+    }
+
+    u.rate = 0.9;
+    u.onend = reset;
+    u.onerror = reset;
     window.speechSynthesis.speak(u);
   };
-  if (location.protocol.startsWith('http')) {
+
+  if (!isIOS && location.protocol.startsWith('http')) {
     const url = 'https://google.com' + encodeURIComponent(text);
     const a = new Audio(url);
-    currentAudio = a; a.onended = reset; a.onerror = runFallback; a.play().catch(runFallback);
-  } else runFallback();
+    currentAudio = a;
+    a.onended = reset;
+    a.onerror = runFallback;
+    a.play().catch(runFallback);
+  } else {
+    runFallback();
+  }
+
   setTimeout(() => { if (isSpeaking) reset(); }, 4000);
 }
+
 
 const SPECIAL_FORMS = {
   'minä': ['minun', 'minua', 'minä', 'minusta'],
@@ -598,7 +646,7 @@ function renderCard() {
       '<div class="buttons" id="typeBtns">' +
       '<button class="btn-secondary" onclick="showHint()">Подсказка</button>' +
       '<button class="btn-primary" onclick="checkTyping()">Проверить</button></div>';
-    setTimeout(() => $("typeInput")?.focus(), 50);
+    
   } else {
     const opts = getQuizOptions(q);
     area.innerHTML = hdr +
@@ -626,6 +674,7 @@ function checkTyping() {
   if (answered) return;
   const inp = $("typeInput"), raw = inp.value.trim();
   if (!raw) { inp.focus(); return; }
+  inp.blur();
   answered = true;
   inp.disabled = true;
   const q = pool.at(0);
@@ -635,12 +684,12 @@ function checkTyping() {
     $("typeFeedback").innerHTML =
       '<div class="feedback-box correct"><b>✅ Верно!</b> ' + q.fullSentence +
       '<span class="fb-trans">' + q.translation + '</span></div>';
-    $("typeBtns").innerHTML = '<button class="btn-success" onclick="nextItem(true)">Дальше →</button>';
+    $("typeBtns").innerHTML = '<button class="btn-success" onclick="nextItem(true)">Дальше</button>';
   } else {
     $("typeFeedback").innerHTML =
       '<div class="feedback-box wrong"><b>❌ Правильно: ' + q.answer + '</b><br>' + q.fullSentence +
       '<span class="fb-trans">' + q.translation + '</span></div>';
-    $("typeBtns").innerHTML = '<button class="btn-wrong" onclick="nextItem(false)">Дальше →</button>';
+    $("typeBtns").innerHTML = '<button class="btn-wrong" onclick="nextItem(false)">Дальше</button>';
   }
 }
 function checkQuiz(btn, chosen) {
@@ -656,7 +705,7 @@ function checkQuiz(btn, chosen) {
     $("typeFeedback").innerHTML =
       '<div class="feedback-box correct">' + q.fullSentence +
       '<span class="fb-trans">' + q.translation + '</span></div>';
-    btns.innerHTML = '<button class="btn-success" onclick="nextItem(true)">Дальше →</button>';
+    btns.innerHTML = '<button class="btn-success" onclick="nextItem(true)">Дальше</button>';
   } else {
     btn.classList.add('wrong');
     document.querySelectorAll('.opt-btn').forEach(b => {
@@ -665,7 +714,7 @@ function checkQuiz(btn, chosen) {
     $("typeFeedback").innerHTML =
       '<div class="feedback-box wrong">' + q.fullSentence +
       '<span class="fb-trans">' + q.translation + '</span></div>';
-    btns.innerHTML = '<button class="btn-wrong" onclick="nextItem(false)">Дальше →</button>';
+    btns.innerHTML = '<button class="btn-wrong" onclick="nextItem(false)">Дальше</button>';
   }
   btns.style.display = 'flex';
 }
@@ -686,3 +735,4 @@ resetSession();
 </script>
 </body>
 </html>
+
